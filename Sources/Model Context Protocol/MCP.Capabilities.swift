@@ -1,7 +1,6 @@
 public import RFC_8259
 
 extension MCP {
-    /// What a server offers. Only the tools capability is modelled.
     public struct Capabilities: Sendable, Hashable {
         public var tools: MCP.Capabilities.Tools?
 

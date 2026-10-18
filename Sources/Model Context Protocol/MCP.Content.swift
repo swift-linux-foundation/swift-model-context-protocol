@@ -1,7 +1,6 @@
 public import RFC_8259
 
 extension MCP {
-    /// A block of content in a tool result. Only text is modelled.
     public enum Content: Sendable, Hashable {
         case text(String)
     }

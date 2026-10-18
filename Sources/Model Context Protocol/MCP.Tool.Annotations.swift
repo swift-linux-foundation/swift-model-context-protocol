@@ -1,19 +1,20 @@
 public import RFC_8259
 
 extension MCP.Tool {
-    /// Hints about a tool's behaviour. Clients must not rely on them from untrusted servers.
     public struct Annotations: Sendable, Hashable {
         public var title: String?
-        /// The tool changes nothing in its environment.
         public var readOnlyHint: Bool?
-        /// The tool may destroy something; meaningful only when it is not read-only.
         public var destructiveHint: Bool?
-        /// Repeating a call with the same arguments has no further effect.
         public var idempotentHint: Bool?
-        /// The tool reaches entities outside a closed domain.
         public var openWorldHint: Bool?
 
-        public init(title: String? = nil, readOnlyHint: Bool? = nil, destructiveHint: Bool? = nil, idempotentHint: Bool? = nil, openWorldHint: Bool? = nil) {
+        public init(
+            title: String? = nil,
+            readOnlyHint: Bool? = nil,
+            destructiveHint: Bool? = nil,
+            idempotentHint: Bool? = nil,
+            openWorldHint: Bool? = nil
+        ) {
             self.title = title
             self.readOnlyHint = readOnlyHint
             self.destructiveHint = destructiveHint

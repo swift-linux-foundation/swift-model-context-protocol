@@ -14,10 +14,13 @@ let package = Package(
         .library(
             name: "Model Context Protocol",
             targets: ["Model Context Protocol"]
-        ),
+        )
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-standards/swift-json-rpc-standard.git", branch: "main"),
+        .package(
+            url: "https://github.com/swift-standards/swift-json-rpc-standard.git",
+            branch: "main"
+        ),
         .package(url: "https://github.com/swift-ietf/swift-rfc-8259.git", branch: "main"),
     ],
     targets: [
@@ -41,17 +44,14 @@ let package = Package(
 )
 
 for target in package.targets where ![.system, .binary, .plugin, .macro].contains(target.type) {
-    let ecosystem: [SwiftSetting] = [
+    target.swiftSettings = (target.swiftSettings ?? []) + [
         .strictMemorySafety(),
         .enableUpcomingFeature("ExistentialAny"),
         .enableUpcomingFeature("InternalImportsByDefault"),
         .enableUpcomingFeature("MemberImportVisibility"),
         .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
-        .enableExperimentalFeature("Lifetimes"),
         .enableUpcomingFeature("InferIsolatedConformances"),
+        .enableExperimentalFeature("Lifetimes"),
+        .treatAllWarnings(as: .error),
     ]
-
-    let package: [SwiftSetting] = []
-
-    target.swiftSettings = (target.swiftSettings ?? []) + ecosystem + package
 }

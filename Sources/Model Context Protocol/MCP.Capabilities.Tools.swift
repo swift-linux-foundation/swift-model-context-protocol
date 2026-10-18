@@ -1,9 +1,7 @@
 public import RFC_8259
 
 extension MCP.Capabilities {
-    /// The server offers tools.
     public struct Tools: Sendable, Hashable {
-        /// Whether the server notifies clients when its tool list changes.
         public var listChanged: Bool
 
         public init(listChanged: Bool = false) {

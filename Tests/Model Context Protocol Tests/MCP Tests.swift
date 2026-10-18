@@ -14,12 +14,18 @@ struct `MCP Tests` {
 
     @Test
     func `methods carry the specified names`() {
-        #expect([MCP.Method.initialize, .initialized, .ping, .toolsList, .toolsCall].map(\.rawValue) == ["initialize", "notifications/initialized", "ping", "tools/list", "tools/call"])
+        #expect(
+            [MCP.Method.initialize, .initialized, .ping, .toolsList, .toolsCall].map(\.rawValue)
+                == ["initialize", "notifications/initialized", "ping", "tools/list", "tools/call"]
+        )
     }
 
     @Test
     func `initialize parameters read the version and client`() throws {
-        let parameters = try MCP.Initialize.Parameters(["protocolVersion": "2025-06-18", "capabilities": [:], "clientInfo": ["name": "c", "version": "1"]])
+        let parameters = try MCP.Initialize.Parameters([
+            "protocolVersion": "2025-06-18", "capabilities": [:],
+            "clientInfo": ["name": "c", "version": "1"],
+        ])
         #expect(parameters.protocolVersion == "2025-06-18")
         #expect(parameters.clientInfo == MCP.Implementation(name: "c", version: "1"))
     }
@@ -39,20 +45,34 @@ struct `MCP Tests` {
             serverInfo: MCP.Implementation(name: "s", version: "1"),
             instructions: "Be kind."
         )
-        #expect(result.value == [
-            "protocolVersion": "2025-11-25",
-            "capabilities": ["tools": ["listChanged": false]],
-            "serverInfo": ["name": "s", "version": "1"],
-            "instructions": "Be kind.",
-        ])
+        #expect(
+            result.value == [
+                "protocolVersion": "2025-11-25",
+                "capabilities": ["tools": ["listChanged": false]],
+                "serverInfo": ["name": "s", "version": "1"],
+                "instructions": "Be kind.",
+            ]
+        )
     }
 
     @Test
     func `a tool lists its schema and annotations`() {
-        let tool = MCP.Tool(name: "echo", description: "Echoes.", inputSchema: ["type": "object"], annotations: MCP.Tool.Annotations(readOnlyHint: true))
-        #expect(MCP.Tool.List.Result(tools: [tool]).value == [
-            "tools": [["name": "echo", "description": "Echoes.", "inputSchema": ["type": "object"], "annotations": ["readOnlyHint": true]]],
-        ])
+        let tool = MCP.Tool(
+            name: "echo",
+            description: "Echoes.",
+            inputSchema: ["type": "object"],
+            annotations: MCP.Tool.Annotations(readOnlyHint: true)
+        )
+        #expect(
+            MCP.Tool.List.Result(tools: [tool]).value == [
+                "tools": [
+                    [
+                        "name": "echo", "description": "Echoes.", "inputSchema": ["type": "object"],
+                        "annotations": ["readOnlyHint": true],
+                    ]
+                ]
+            ]
+        )
     }
 
     @Test
@@ -60,7 +80,10 @@ struct `MCP Tests` {
         let call = try MCP.Tool.Call(["name": "echo"])
         #expect(call.name == "echo")
         #expect(call.arguments.isEmpty)
-        #expect(try MCP.Tool.Call(["name": "echo", "arguments": ["text": "hi"]]).arguments["text"] == "hi")
+        #expect(
+            try MCP.Tool.Call(["name": "echo", "arguments": ["text": "hi"]]).arguments["text"]
+                == "hi"
+        )
     }
 
     @Test
@@ -72,7 +95,16 @@ struct `MCP Tests` {
 
     @Test
     func `a call result carries content, structured content and the error flag`() {
-        let result = MCP.Tool.Call.Result(content: [.text("hi")], structuredContent: ["said": "hi"], isError: true)
-        #expect(result.value == ["content": [["type": "text", "text": "hi"]], "structuredContent": ["said": "hi"], "isError": true])
+        let result = MCP.Tool.Call.Result(
+            content: [.text("hi")],
+            structuredContent: ["said": "hi"],
+            isError: true
+        )
+        #expect(
+            result.value == [
+                "content": [["type": "text", "text": "hi"]], "structuredContent": ["said": "hi"],
+                "isError": true,
+            ]
+        )
     }
 }

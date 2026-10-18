@@ -2,7 +2,6 @@ public import JSON_RPC_Standard
 public import RFC_8259
 
 extension MCP.Tool {
-    /// The `tools/call` request: which tool, with which arguments.
     public struct Call: Sendable, Hashable {
         public var name: String
         public var arguments: RFC_8259.Object
@@ -15,7 +14,6 @@ extension MCP.Tool {
 }
 
 extension MCP.Tool.Call {
-    /// The call a request's parameters describe, or `invalidParams` without a tool name.
     public init(_ params: RFC_8259.Value?) throws(JSON_RPC.Error) {
         guard let name = params?["name"]?.string else {
             throw JSON_RPC.Error(code: .invalidParams, message: "missing tool name")

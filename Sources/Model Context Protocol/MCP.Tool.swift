@@ -1,14 +1,11 @@
 public import RFC_8259
 
 extension MCP {
-    /// A tool's definition, as `tools/list` lists it.
     public struct Tool: Sendable, Hashable {
         public var name: String
         public var title: String?
         public var description: String?
-        /// A JSON Schema object for the arguments.
         public var inputSchema: RFC_8259.Value
-        /// A JSON Schema object for the structured result.
         public var outputSchema: RFC_8259.Value?
         public var annotations: MCP.Tool.Annotations?
 

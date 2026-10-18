@@ -1,5 +1,4 @@
 extension MCP {
-    /// A JSON-RPC method name the protocol defines.
     public struct Method: RawRepresentable, Sendable, Hashable {
         public var rawValue: String
 
