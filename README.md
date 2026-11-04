@@ -1,58 +1,11 @@
 # swift-model-context-protocol
 
-![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
-[![CI](https://github.com/swift-linux-foundation/swift-model-context-protocol/workflows/CI/badge.svg)](https://github.com/swift-linux-foundation/swift-model-context-protocol/actions/workflows/ci.yml)
+Use this package when you are writing a Model Context Protocol server that offers tools and you want the protocol's messages as Swift values. It reads `initialize` and `tools/call` parameters and builds the results as `RFC_8259.Value`. Start from `MCP.Tool` and `MCP.Tool.Call`. Resources, prompts, sampling, content other than text and client requests are not modelled. For a server that already reads and answers the JSON-RPC lines, use swift-mcp.
 
-Model Context Protocol specification types for Swift.
+## Laws
 
-## Overview
-
-swift-model-context-protocol models the server side of the [Model Context Protocol](https://modelcontextprotocol.io), a project of the Linux Foundation's Agentic AI Foundation, on top of [swift-json-rpc-standard](https://github.com/swift-standards/swift-json-rpc-standard). Messages are values of `RFC_8259.Value`.
-
-The scope is tools only:
-
-- `MCP.Version` (the published revisions, newest first) and `MCP.Method`;
-- `MCP.Initialize.Parameters` and `MCP.Initialize.Result`, with `MCP.Implementation` and `MCP.Capabilities`;
-- `MCP.Tool` with `MCP.Tool.Annotations`, `MCP.Tool.List.Result`;
-- `MCP.Tool.Call` and `MCP.Tool.Call.Result`, with text `MCP.Content`.
-
-Resources, prompts, sampling, other content kinds and client requests are not modelled. A server that answers JSON-RPC lines with these types is [swift-mcp](https://github.com/swift-compositions/swift-mcp).
-
-## Products
-
-- `Model Context Protocol` (module `Model_Context_Protocol`).
-
-## Installation
-
-```swift
-dependencies: [
-    .package(url: "https://github.com/swift-linux-foundation/swift-model-context-protocol.git", branch: "main")
-]
-```
-
-```swift
-.target(
-    name: "YourTarget",
-    dependencies: [
-        .product(name: "Model Context Protocol", package: "swift-model-context-protocol"),
-    ]
-)
-```
-
-## Quick Start
-
-```swift
-import Model_Context_Protocol
-
-let tool = MCP.Tool(
-    name: "echo",
-    description: "Echoes its text.",
-    inputSchema: ["type": "object", "properties": ["text": ["type": "string"]]],
-    annotations: MCP.Tool.Annotations(readOnlyHint: true)
-)
-MCP.Tool.List.Result(tools: [tool]).value
-```
-
-## License
-
-Apache 2.0. See [LICENSE.md](LICENSE.md).
+- `MCP.Version.all` lists the published revisions newest first.
+- Reading `initialize` parameters needs only a `protocolVersion` string, and any string is accepted, whether or not it is in `MCP.Version.all`. Without one, reading fails with a JSON-RPC invalid params error.
+- `clientInfo` is kept only when it has both a `name` and a `version` string. Otherwise it reads as nil, with no error.
+- Reading `tools/call` parameters fails with a JSON-RPC invalid params error when `name` is missing or not a string. Missing `arguments`, or `arguments` that isn't an object, reads as no arguments.
+- Every `value` leaves out members whose optional property is nil. `isError` and `listChanged` are always written, even when false.
