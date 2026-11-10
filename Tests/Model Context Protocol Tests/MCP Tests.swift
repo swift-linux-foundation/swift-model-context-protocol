@@ -13,6 +13,12 @@ struct `MCP Tests` {
     }
 
     @Test
+    func `a later version is greater`() {
+        #expect(MCP.Version("2024-11-05") < "2025-11-25")
+        #expect(MCP.Version.all.max() == "2025-11-25")
+    }
+
+    @Test
     func `methods carry the specified names`() {
         #expect(
             [MCP.Method.initialize, .initialized, .ping, .toolsList, .toolsCall].map(\.rawValue)
